@@ -1,24 +1,26 @@
+// service/build.gradle
 plugins {
     id 'java'
-    // ADD THESE TWO LINES:
-    id 'org.springframework.boot' // Apply the Spring Boot plugin here
-    id 'io.spring.dependency-management' // Apply the dependency management plugin here
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
 }
 
 group = 'com.springbootModularApi'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
-    mavenCentral() // Keep this here for good measure, though the root one might suffice now.
+    mavenCentral()
 }
 
 dependencies {
-    // Existing dependencies
     implementation project(':common')
 
-    // This brings in core Spring Framework dependencies, including @Service
-    // Now the dependency management plugin will infer its version.
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // Para Spring Data JPA
+
+    // --- CAMBIO CLAVE: Usa el driver de PostgreSQL ---
+    runtimeOnly 'org.postgresql:postgresql' // Driver de PostgreSQL
+    // --- FIN CAMBIO CLAVE ---
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
