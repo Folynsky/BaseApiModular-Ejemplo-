@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' // Aplica el plugin de Spring Boot aquí
+    id 'io.spring.dependency-management' // Y el de gestión de dependencias
+}
+
+group = 'com.springbootModularApi'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Dependencias de Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-test' // Para pruebas si las necesitas
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // Dependencia de tus módulos de servicio y common
+    implementation project(':service')
+    implementation project(':common')
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Configuración para el ejecutable de Spring Boot
+bootJar {
+    // Remueve la línea 'mainClassName = 'com.example.api.ApiApplication''
+    // Spring Boot ahora detecta automáticamente la clase principal.
+}

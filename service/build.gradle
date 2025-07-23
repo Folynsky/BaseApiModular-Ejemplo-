@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    // ADD THESE TWO LINES:
+    id 'org.springframework.boot' // Apply the Spring Boot plugin here
+    id 'io.spring.dependency-management' // Apply the dependency management plugin here
+}
+
+group = 'com.springbootModularApi'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral() // Keep this here for good measure, though the root one might suffice now.
+}
+
+dependencies {
+    // Existing dependencies
+    implementation project(':common')
+
+    // This brings in core Spring Framework dependencies, including @Service
+    // Now the dependency management plugin will infer its version.
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

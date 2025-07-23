@@ -1,0 +1,5 @@
+rootProject.name = 'springbootModularApi' // Puedes cambiar el nombre de tu proyecto raíz
+
+include 'common'
+include 'service'
+include 'api'

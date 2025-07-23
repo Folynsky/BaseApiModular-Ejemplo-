@@ -1,0 +1,33 @@
+plugins {
+	id 'org.springframework.boot' version '3.3.1' apply false // Aplica false para que lo usen los subproyectos
+	id 'io.spring.dependency-management' version '1.1.4' apply false // Aplica false
+}
+
+group = 'com.springbootModularApi'
+version = '0.0.1-SNAPSHOT'
+
+// Configuración global para todos los subproyectos
+allprojects {
+	repositories {
+		mavenCentral()
+	}
+
+	// Configuración para usar Java 21 en todos los subproyectos
+	apply plugin: 'java'
+	sourceCompatibility = '21'
+	targetCompatibility = '21'
+
+	tasks.withType(Test).configureEach {
+		useJUnitPlatform()
+	}
+}
+
+// Configuración específica para los subproyectos que usan Spring Boot
+subprojects {
+	// Aplica el plugin de Spring Boot y el de dependency-management a los módulos necesarios
+	// Si bien 'common' y 'service' no lo necesitan directamente para compilar,
+	// es buena práctica mantener esta configuración para módulos que podrían
+	// en el futuro usar funcionalidades de Spring o para asegurar la coherencia
+	// en la gestión de versiones si tuvieran dependencias de Spring.
+	// Para este caso, solo 'api' realmente lo necesita para el 'bootJar'.
+}
