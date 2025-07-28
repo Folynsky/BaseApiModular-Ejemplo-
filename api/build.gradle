@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' // Aplica el plugin de Spring Boot aquí
-    id 'io.spring.dependency-management' // Y el de gestión de dependencias
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
 }
 
 group = 'com.springbootModularApi'
@@ -11,26 +11,44 @@ repositories {
     mavenCentral()
 }
 
+// Define a custom configuration for the Mockito agent JAR
+configurations {
+    mockitoAgent {
+        // --- ADD THIS LINE ---
+        transitive = false // Ensure only the directly specified JAR is resolved, not its dependencies
+        // --- END ADD ---
+    }
+}
+
 dependencies {
-    // Dependencias de Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-test' // Para pruebas si las necesitas
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // Dependencia de tus módulos de servicio y common
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Critical: Add mockito-core to the custom agent configuration
+    mockitoAgent 'org.mockito:mockito-core:5.12.0' // Use the same version as your Spring Boot Test pulls in for consistency
+
     implementation project(':service')
     implementation project(':common')
 }
 
-tasks.named('test') {
+// --- Configuración para TODAS las tareas de prueba (Test) ---
+// With the Java Agent, we should REMOVE the --add-opens jvmArgs.
+tasks.withType(Test) {
     useJUnitPlatform()
+
+    // Ensure jvmArgs are NOT present here (remove or comment out the block)
+    // jvmArgs(...)
+
+    // Add the Java Agent JVM Arg
+    jvmArgs "-javaagent:${configurations.mockitoAgent.singleFile}"
+
+    doFirst {
+        println "JVM Arguments for test task: ${jvmArgs.join(' ')}"
+    }
 }
 
-// Configuración para el ejecutable de Spring Boot
 bootJar {
-    // Remueve la línea 'mainClassName = 'com.example.api.ApiApplication''
-    // Spring Boot ahora detecta automáticamente la clase principal.
+    // Spring Boot now detects the main class automatically.
 }
